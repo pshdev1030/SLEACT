@@ -1,3 +1,4 @@
+// import useSocket from '@hooks/useSocket';
 import { CollapseButton } from '@components/DMList/styles';
 import useSocket from '@hooks/useSocket';
 import { IUser, IUserWithOnline } from '@typings/db';
@@ -16,16 +17,18 @@ const DMList: FC = () => {
     userData ? `/api/workspaces/${workspace}/members` : null,
     fetcher,
   );
+
   const [socket] = useSocket(workspace);
   const [channelCollapse, setChannelCollapse] = useState(false);
   const [onlineList, setOnlineList] = useState<number[]>([]);
+  console.log(onlineList);
+  
 
   const toggleChannelCollapse = useCallback(() => {
     setChannelCollapse((prev) => !prev);
   }, []);
 
   useEffect(() => {
-    console.log('DMList: workspace 바꼈다', workspace);
     setOnlineList([]);
   }, [workspace]);
 
@@ -81,3 +84,4 @@ const DMList: FC = () => {
 };
 
 export default DMList;
+// NavLink == 액티브 클래스네임을 줄 수 있다. 지금 주소랑 이게 같을경우 클래스가 부여된다.

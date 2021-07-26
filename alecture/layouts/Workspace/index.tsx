@@ -19,6 +19,8 @@ import InviteWorkspaceModal from '@components/InviteWorkspaceModal';
 import InviteChannelModal from '@components/InviteChannelModal';
 import ChannelList from '@components/ChannelList';
 import DMList from '@components/DMList';
+import { useEffect } from 'react';
+import useSocket from '@hooks/useSocket';
 const Channel= loadable(()=>import('@pages/Channel'));
 const DirectMessage=loadable(()=>import('@pages/DirectMessage'));
 
@@ -41,6 +43,20 @@ const Workspace: VFC=()=>{
     const [showInviteChannelModal,setShowInviteChannelModal]=useState(false);
     const [newWorkspace,onChangeWorkspace,setNewWorkspace]=useInput('');
     const [newUrl,onChangeUrl,setNewUrl]=useInput('');
+    const [socket,disconnect]=useSocket(workspace);
+
+    useEffect(()=>{
+        if(channelData&&userData&&socket){
+            socket.emit('login',{id:userData,channels:channelData.map((v)=>v.id)})
+        }
+    },[socket,channelData,userData])
+
+    useEffect(()=>{
+        return()=>{
+            disconnect();
+        }
+    },[workspace,disconnect])
+    // workspace바뀔 때 연결 끊음
 
     const onLogout=useCallback(()=>{
         axios.post('api/users/logout',null,{
@@ -108,6 +124,7 @@ const Workspace: VFC=()=>{
     },[])
     
     const onClickInviteWorkspace=useCallback(()=>{
+        setShowInviteWorkspaceModal((prev)=>!prev);
     },[])
 
     const onClickAddChannel=useCallback(()=>{
