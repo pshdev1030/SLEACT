@@ -35,6 +35,8 @@ const Workspace: VFC=()=>{
         userData?`/api/workspaces/${workspace}/channels`:null,
         fetcher);
     // 로그인한 상태에만 요청을 보내도록
+
+    const { data: memberData } = useSWR<IUser[]>(userData ? `/api/workspaces/${workspace}/members` : null, fetcher);
     const [showUserMenu,setShowUserMenu]=useState(false);
     const [showCreateWorkspaceModal,setShowCreateWorkspaceModal]=useState(false);
     const [showWorkspaceModal,setShowWorkspaceModal]=useState(false);
